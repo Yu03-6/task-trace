@@ -8,8 +8,8 @@ description: "Discuss and persist project decisions, then maintain execution che
 Keep enough durable context to explain the current plan and resume authorized
 work after interruptions. Maintain two complementary task documents: `PLAN.md`
 for intended outcomes and decisions, and `WORKLOG.md` for actual state and
-evidence. Discuss important tradeoffs with the user while keeping these records
-current.
+evidence. Connect each meaningful change to an agreed goal or decision and its
+observed result, so a successor can recover both the reason and the actual state.
 
 Keep notes proportional to the task. Record a constraint where it belongs and
 refer to it elsewhere instead of repeating whole lists. Include risks and
@@ -21,26 +21,35 @@ approval steps or generic cautionary sections.
 - Apply this workflow to substantive planning or work that benefits from durable
   decisions and checkpoints. An explicit invocation can start it for a smaller
   task, but does not require inventing alternatives or a separate planning phase.
-- Honor explicit answer-only, read-only, and no-file boundaries. In those modes,
-  discuss or summarize in chat without creating records unless documentation
-  writes are expressly included. Planning without implementation can still use
-  these records. Existing authorization remains valid; this skill adds neither
-  repeated approval gates nor execution permission.
+- Review, answer-only, and monitoring requests do not write records by default.
+  Honor read-only and no-file boundaries; use chat unless documentation writes
+  are expressly included, including authorization already given in this task.
+  Planning without implementation can still use records when writing them is
+  authorized. This skill adds neither approval gates nor execution permission.
 - Reuse the task's existing planning and work records, adapting their structure.
-  Do not create a parallel source of truth. If none exists, prefer the project's
-  documentation convention; otherwise use `docs/tasks/<short-task-name>/` in the
-  task workspace. Honor explicit output locations. Keep task data out of the
-  installed skill directory and separate unrelated tasks.
+  Choose documents by purpose: an execution log cannot replace a design
+  specification or a specialized verification matrix. Link to those authoritative
+  records rather than duplicating them. Do not create a parallel source of truth.
+  If no records exist, prefer the project's documentation convention; otherwise
+  use `docs/tasks/<short-task-name>/` in the task workspace. Honor explicit output
+  locations. Keep task data out of the skill directory and unrelated tasks apart.
+- Keep engineering task records with the project unless the user chooses another
+  destination. Recording a plan does not authorize creating or moving it to Pages.
 - Create `PLAN.md` once there is substantive planning content. Create
   `WORKLOG.md` when the first decision needs preserving or execution starts.
   Use [the plan template](assets/PLAN.md) and
   [the worklog template](assets/WORKLOG.md) only when creating new records. Fill
   them with observed information; omit irrelevant sections and unused template
-  instructions. Follow the project's document language requirements.
+  instructions. Follow the project's document language requirements. Do not
+  reinitialize existing documents to add template fields or a recovery summary.
 - Surface the document paths when first created or selected and carry them in
   handoffs. Link the two records to each other. A short entry in an existing
   project index or `AGENTS.md` can improve discovery when that edit is within the
   task's authorized scope; do not modify global guidance to activate this skill.
+- After selecting task records and establishing permission to write them, follow
+  [recovery setup](references/recovery.md) to bind this session to their exact
+  task paths. Do not bind during a read-only request. Binding selects recovery
+  inputs; it does not extend task scope or authorize execution.
 - If files cannot be written, report that limitation and provide the essential
   checkpoint in chat. Do not claim persistence or completion of a failed write.
 
@@ -59,8 +68,9 @@ approval steps or generic cautionary sections.
    routine details from the project and existing authorization; continue
    independent work while a decision is pending.
 4. Capture the selected approach's scope, exclusions, important constraints,
-   implementation outline, and observable acceptance criteria. Identify facts
-   still requiring investigation rather than presenting them as established.
+   implementation outline, and observable acceptance criteria. Tie each intended
+   outcome to the evidence needed to establish it. Identify facts still requiring
+   investigation rather than presenting them as established.
 
 ## Confirm, converge, and revise
 
@@ -82,11 +92,11 @@ approval steps or generic cautionary sections.
   Then leave only the selected approach in the resolved part of the plan. Keep
   unresolved comparisons until they are decided. Discard repetitive discussion;
   do not preserve every speculative idea or depend on an uncommitted Git history.
-- Reopen only decisions affected by a material change in goals, scope, constraints,
-  or important tradeoffs. Keep a proposed revision distinct from the currently
-  agreed plan until resolved. Apply an explicit new user direction without asking
-  for it again, record the reason, and update the affected plan. Routine reversible
-  implementation choices within existing authority do not require replanning.
+- When a new finding changes a key tradeoff, record which fact changed and reopen
+  only the affected decision. Preserve unaffected agreements. Keep a proposed
+  revision distinct from the agreed plan until resolved. Apply an explicit new
+  user direction without asking again and update the affected scope and evidence
+  needed. Routine reversible choices within authority do not require replanning.
 
 ## Maintain execution memory
 
@@ -96,13 +106,19 @@ active work, completed and remaining outcomes, blockers, verification gaps,
 important failed approaches, and the next concrete action without replaying the
 entire history. Include the workspace or branch when needed to locate the work.
 
+- Before expanding a work unit, identify the agreed outcome it serves or the
+  observed dependency that makes it necessary. Keep an unrelated improvement as
+  a proposal; do not turn an interesting finding into an additional assignment.
 - Record one entry per meaningful change unit: a behavior change, root-cause fix,
   consequential configuration change, decision, or failed attempt worth avoiding.
   Group related edits; do not log every save, tool call, line change, or routine
   document update. Do not recursively log updates to the log itself.
-- Each change entry records affected files or stable symbols, what changed, why,
-  actual verification and its limits, and remaining work when relevant. Link to
-  existing commits or reports if useful; do not create commits just for logging.
+- Each change entry connects affected files or stable symbols and the actual
+  change to a confirmed goal, selected decision, or necessary consequence of
+  authorized work. Record the actual verification result and its limits, plus
+  remaining work when relevant. A link or short reference is enough; no decision
+  numbering system is required. Cite existing reports or commits when useful;
+  do not create commits just for logging.
 - Distinguish planned, in progress, changed but unverified, verified, failed,
   blocked, and reverted work where relevant. An attempted command or written
   implementation is not evidence of success. Preserve useful failure evidence;
@@ -111,6 +127,9 @@ entire history. Include the workspace or branch when needed to locate the work.
   state. Update after the unit, a consequential decision, new blocker, verification
   result, or handoff. Save available verified progress when stopping. Do not rely
   on receiving an advance warning of compaction or interruption.
+- Match verification to the affected outcome and project requirements. Preserve
+  the command or method, observed result, and material gaps; an intended check,
+  a started command, or an unfinished subtask is not a completed result.
 - Keep the plan's intent and the worklog's observed state consistent without
   duplicating progress in both. Cite the relevant decision when implementation
   changes follow a revised plan. Write decision evidence before pruning a plan;
@@ -126,28 +145,43 @@ entire history. Include the workspace or branch when needed to locate the work.
 
 ## Resume and finish
 
+For optional automatic recovery, use [the recovery reference](references/recovery.md).
+After host registration and trust, a `SessionStart` hook can supply bounded task
+data on supported startup, resume, compact, and fork events. It uses the session's
+exact binding and does not guess when none exists. Hook reload is read-only; it
+does not confer permission or replace checking the live task. Without a registered
+hook, follow the same manual recovery steps below.
+
 On a resumed task, handoff, or recognized context loss:
 
 1. Locate the correct task records from known paths, handoff links, or the
    project's task directory. Do not apply another task's records. If multiple
    candidates are genuinely ambiguous, clarify the task identity.
-2. Read the current plan and checkpoint, then only relevant decision or change
-   entries. Apply the latest explicit user direction and applicable instructions;
-   treat historical notes as context, not new authority.
+2. Read the plan's recovery summary and current worklog checkpoint, then relevant
+   decisions or changes. If a summary is absent, read the existing structure;
+   no migration is required. Distinguish user confirmation, agent recommendations,
+   and actual observations. Apply the latest explicit user direction and current
+   instructions; old pending work and next-action notes are not new authorization.
 3. Inspect relevant artifacts or workspace differences to establish actual
    progress. Reuse applicable verification evidence, and repeat checks only when
    changes, failures, or uncertainty justify it. Mark unverifiable claims as
    needing verification instead of guessing or silently revising the goal to
    match the current implementation.
-4. Reconcile the checkpoint and continue the next authorized action. Missing
-   evidence of a material decision may require clarification; it should not block
-   unrelated authorized work.
+4. Reconcile the checkpoint when record writes are authorized and continue the
+   next authorized action. Missing evidence of a material decision may require
+   clarification; it should not block unrelated authorized work.
 
-At completion, update the checkpoint with outcomes, actual verification, and any
-remaining limitations or deferred work. Mark the task complete only when its
-agreed scope is satisfied. Keep records for future continuation and report the
-result concisely; do not add a separate audit loop just to maintain these files.
+Mark completion only when the agreed scope is delivered, necessary verification
+is resolved, and required commands and subtasks have returned their results.
+An interruption, unknown result, or unmet required check belongs in the checkpoint
+as remaining work; a stopped attempt is not a completed task. Record a user's
+explicit change to the completion criteria rather than silently weakening them.
 
-This skill provides instructions and durable files, not a background watcher or
-a guarantee against context loss. Recovery depends on keeping records current,
-locating them, reading them, and checking the relevant facts.
+Once these conditions hold, update the checkpoint once with delivered outcomes,
+completion evidence, and material limitations or explicitly deferred work, then
+deliver the result. Do not append optional improvements or begin another review
+cycle just to keep the memory current. Retain the records for later continuation.
+
+This skill provides durable task context and optional recovery support. Recovery
+still depends on current records and checking the relevant facts; loading notes
+alone cannot establish what happened or what the user has authorized.

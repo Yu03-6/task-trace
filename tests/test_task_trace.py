@@ -1,4 +1,4 @@
-"""Black-box regression tests for the project-memory command-line interface.
+"""Black-box regression tests for the task-trace command-line interface.
 
 Run with: python3 -m unittest discover -s tests -v
 Every command uses a temporary CODEX_HOME and isolated session identifiers.
@@ -13,12 +13,12 @@ import tempfile
 import unittest
 
 
-SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "project_memory.py"
+SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "task_trace.py"
 
 
-class ProjectMemoryTests(unittest.TestCase):
+class TaskTraceTests(unittest.TestCase):
     def setUp(self):
-        self.temporary = tempfile.TemporaryDirectory(prefix="project-memory-test-")
+        self.temporary = tempfile.TemporaryDirectory(prefix="task-trace-test-")
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name).resolve()
         self.codex_home = self.root / "codex-home"
@@ -326,7 +326,7 @@ class ProjectMemoryTests(unittest.TestCase):
     def test_corrupt_persisted_state_never_blocks_or_repairs_itself(self):
         plan, _ = self.write_documents()
         self.bind(plan)
-        state_files = list((self.codex_home / "project-memory").rglob("*.json"))
+        state_files = list((self.codex_home / "task-trace").rglob("*.json"))
         self.assertTrue(state_files, "A successful bind should persist session state")
         for path in state_files:
             path.write_text("{broken-persisted-state", encoding="utf-8")

@@ -7,17 +7,17 @@ complete. It uses the standard library and requires Python 3.8 or later.
 ## Install the host integration
 
 Run the installer from the skill's stable installed location, not a temporary
-checkout. For an installation in `~/.agents/skills/project-memory`:
+checkout. For an installation in `~/.agents/skills/task-trace`:
 
 ```sh
-python3 ~/.agents/skills/project-memory/scripts/project_memory.py install-hooks
+python3 ~/.agents/skills/task-trace/scripts/task_trace.py install-hooks
 ```
 
 Use the actual installed path when the environment uses another skill directory.
 The installer adds one `SessionStart` handler to `${CODEX_HOME:-~/.codex}/hooks.json`.
 It preserves unrelated handlers, makes a backup of existing configuration before
 its first change, and does nothing on an identical repeat installation. An
-existing different Project Memory handler must be reviewed rather than silently
+existing different Task Trace handler must be reviewed rather than silently
 replaced. It does not edit `config.toml` or any hook trust settings.
 
 Codex requires review and trust of the exact hook definition before it runs.
@@ -32,12 +32,26 @@ uses Python's portable filesystem APIs; Windows host registration is not verifie
 To remove only the generated handler:
 
 ```sh
-python3 ~/.agents/skills/project-memory/scripts/project_memory.py uninstall-hooks
+python3 ~/.agents/skills/task-trace/scripts/task_trace.py uninstall-hooks
 ```
 
 The task documents and session bindings are preserved. `--codex-home PATH` lets
 the installer target a specific host configuration directory; task binding and
 loading use the runtime's `CODEX_HOME` environment variable.
+
+## Migrate from Project Memory
+
+Before updating or moving an old installation, run its existing
+`scripts/project_memory.py uninstall-hooks` command to remove the old handler.
+Then use the renamed `task-trace` skill directory and `scripts/task_trace.py`
+script, and run `install-hooks` from that stable installed path. Review and
+trust the new exact definition in the Codex CLI's `/hooks` before it can run.
+
+To retain existing bindings, move `${CODEX_HOME:-~/.codex}/project-memory/bindings/`
+to `${CODEX_HOME:-~/.codex}/task-trace/bindings/`. If the destination already exists,
+inspect and reconcile its bindings before proceeding; do not overwrite it.
+Task documents do not need to be renamed. Without migrating bindings, bind the
+intended task again with the new script.
 
 ## Bind the task after selecting its records
 
@@ -45,7 +59,7 @@ When maintaining records is authorized, bind the current session after the plan
 exists. Replace the example paths with the actual workspace and records:
 
 ```sh
-python3 ~/.agents/skills/project-memory/scripts/project_memory.py bind \
+python3 ~/.agents/skills/task-trace/scripts/task_trace.py bind \
   --workspace /path/to/project \
   --plan docs/tasks/account-sync/PLAN.md \
   --worklog docs/tasks/account-sync/WORKLOG.md
@@ -58,7 +72,7 @@ report that automatic binding is unavailable. A worklog may be absent during
 early planning; it is loaded once it exists. Existing nonstandard filenames can
 be supplied, so the workflow does not need to rename project documents.
 
-Bindings live in `${CODEX_HOME:-~/.codex}/project-memory/bindings/`, one JSON file
+Bindings live in `${CODEX_HOME:-~/.codex}/task-trace/bindings/`, one JSON file
 per session. They contain version metadata, session identity, and workspace and
 document paths, not document contents. Rebinding the
 same session deliberately switches its task. Other sessions retain their own
@@ -68,7 +82,7 @@ writes were already authorized.
 When a conversation moves to an unrelated task, remove or replace its binding:
 
 ```sh
-python3 ~/.agents/skills/project-memory/scripts/project_memory.py unbind
+python3 ~/.agents/skills/task-trace/scripts/task_trace.py unbind
 ```
 
 Keep completed task documents. A completed checkpoint can remain bound for a

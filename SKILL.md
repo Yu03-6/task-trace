@@ -1,9 +1,9 @@
 ---
-name: project-memory
+name: task-trace
 description: "Discuss and persist project decisions, then maintain execution checkpoints for long-running work. Use for substantive project planning, comparing implementation approaches, or resuming work with an existing plan and worklog. Skip ordinary Q&A and isolated small edits unless continuing a tracked task."
 ---
 
-# Project Memory
+# Task Trace
 
 Keep enough durable context to explain the current plan and resume authorized
 work after interruptions. Maintain two complementary task documents: `PLAN.md`

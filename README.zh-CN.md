@@ -1,8 +1,8 @@
-# Project Memory / 项目记忆
+# Task Trace / 任务脉络
 
 [English](README.md) | 简体中文
 
-Project Memory 是一个 Codex 技能，将项目决策、有意义的变更、实际验证和完成依据连接起来，
+Task Trace 是一个 Codex 技能，将项目决策、有意义的变更、实际验证和完成依据连接起来，
 保留足够的任务上下文，帮助长任务在中断、交接或上下文压缩后继续推进已授权工作。
 
 可选的恢复加载器能在会话开始时载入已绑定任务的计划摘要和当前检查点。
@@ -55,7 +55,7 @@ Project Memory 是一个 Codex 技能，将项目决策、有意义的变更、�
 
 ```sh
 mkdir -p ~/.agents/skills
-git clone https://github.com/Yu03-6/project-memory.git ~/.agents/skills/project-memory
+git clone https://github.com/Yu03-6/task-trace.git ~/.agents/skills/task-trace
 ```
 
 如果环境已经使用其他受支持的技能目录，请沿用原位置。
@@ -66,29 +66,31 @@ git clone https://github.com/Yu03-6/project-memory.git ~/.agents/skills/project-
 纯文档流程没有额外运行时依赖。可选自动恢复需要 Python 3.8 或更高版本，
 仅使用标准库。安装技能本身不会注册或激活恢复钩子。
 
+从 Project Memory 升级时，请在移动旧安装前遵循[更名迁移步骤](references/recovery.md#migrate-from-project-memory)。
+
 ## 使用示例
 
-[配置](agents/openai.yaml)允许自动匹配，也可以显式使用 `$project-memory`。
+[配置](agents/openai.yaml)允许自动匹配，也可以显式使用 `$task-trace`。
 请求可以使用中文或英文，任务文档遵循项目本身的语言要求。
 
 **先规划并记录，暂不实施**
 
 ```text
-使用 $project-memory，比较账户同步方案。
+使用 $task-trace，比较账户同步方案。
 可以保存计划和执行记录，但暂时不要实施。
 ```
 
 **选定方案并实施**
 
 ```text
-使用 $project-memory。选择方案 A 并实施账户同步，范围不包含支付。
+使用 $task-trace。选择方案 A 并实施账户同步，范围不包含支付。
 保留选择理由和实际验证证据。
 ```
 
 **恢复任务**
 
 ```text
-使用 $project-memory，恢复 docs/tasks/account-sync/ 中记录的任务。
+使用 $task-trace，恢复 docs/tasks/account-sync/ 中记录的任务。
 阅读计划和检查点，核对真实工作区，完成已授权范围。
 ```
 
@@ -97,7 +99,7 @@ git clone https://github.com/Yu03-6/project-memory.git ~/.agents/skills/project-
 在受支持的宿主上，从稳定的技能安装位置运行：
 
 ```sh
-python3 ~/.agents/skills/project-memory/scripts/project_memory.py install-hooks
+python3 ~/.agents/skills/task-trace/scripts/task_trace.py install-hooks
 ```
 
 安装器在宿主的 `hooks.json` 注册一个 `SessionStart` 处理器，保留其他处理器，
@@ -110,7 +112,7 @@ python3 ~/.agents/skills/project-memory/scripts/project_memory.py install-hooks
 将示例路径替换为实际工作区和任务文档，脚本路径也应对应真实安装位置：
 
 ```sh
-python3 ~/.agents/skills/project-memory/scripts/project_memory.py bind \
+python3 ~/.agents/skills/task-trace/scripts/task_trace.py bind \
   --workspace /path/to/project \
   --plan docs/tasks/account-sync/PLAN.md \
   --worklog docs/tasks/account-sync/WORKLOG.md
@@ -146,7 +148,7 @@ python3 ~/.agents/skills/project-memory/scripts/project_memory.py bind \
 - [SKILL.md](SKILL.md)：决策、证据、恢复和完成流程。
 - [agents/openai.yaml](agents/openai.yaml)：显示信息与调用配置。
 - [assets/PLAN.md](assets/PLAN.md) 与 [assets/WORKLOG.md](assets/WORKLOG.md)：新建记录模板。
-- [scripts/project_memory.py](scripts/project_memory.py)：会话绑定与可选钩子集成。
+- [scripts/task_trace.py](scripts/task_trace.py)：会话绑定与可选钩子集成。
 - [references/recovery.md](references/recovery.md)：设置、行为与验证详情。
 - [tests/](tests/)：加载器和配置处理的隔离检查。
 

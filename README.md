@@ -1,4 +1,4 @@
-# Project Memory
+# Task Trace
 
 English | [简体中文](README.zh-CN.md)
 
@@ -64,7 +64,7 @@ With Git installed, clone this repository into a user-level Codex skill director
 
 ```sh
 mkdir -p ~/.agents/skills
-git clone https://github.com/Yu03-6/project-memory.git ~/.agents/skills/project-memory
+git clone https://github.com/Yu03-6/task-trace.git ~/.agents/skills/task-trace
 ```
 
 If your environment uses another supported skill directory, keep that location.
@@ -76,6 +76,10 @@ The document workflow has no additional runtime dependency. Optional automatic
 recovery requires Python 3.8 or later and uses only the standard library.
 Installing the skill does not register or activate its recovery hook.
 
+When upgrading from Project Memory, follow the
+[rename migration steps](references/recovery.md#migrate-from-project-memory)
+before moving the old installation.
+
 ## Use
 
 [Automatic matching](agents/openai.yaml) is enabled, and you can invoke the skill
@@ -85,21 +89,21 @@ language requirements.
 **Plan without implementing**
 
 ```text
-Use $project-memory to compare our account synchronization approaches.
+Use $task-trace to compare our account synchronization approaches.
 You may save the plan and worklog, but do not implement the approach yet.
 ```
 
 **Select and implement**
 
 ```text
-Use $project-memory. Choose approach A and implement account synchronization,
+Use $task-trace. Choose approach A and implement account synchronization,
 excluding payments. Preserve the decision reasons and verification evidence.
 ```
 
 **Resume**
 
 ```text
-Use $project-memory to resume docs/tasks/account-sync/. Read the plan and
+Use $task-trace to resume docs/tasks/account-sync/. Read the plan and
 checkpoint, check the actual workspace, and finish the authorized scope.
 ```
 
@@ -108,7 +112,7 @@ checkpoint, check the actual workspace, and finish the authorized scope.
 Run the installer from the stable installed skill path on a supported host:
 
 ```sh
-python3 ~/.agents/skills/project-memory/scripts/project_memory.py install-hooks
+python3 ~/.agents/skills/task-trace/scripts/task_trace.py install-hooks
 ```
 
 This registers a `SessionStart` handler in the host's `hooks.json`, preserves
@@ -123,7 +127,7 @@ The plan must already exist. Replace these paths with the actual workspace and
 records, using the installed script's actual location:
 
 ```sh
-python3 ~/.agents/skills/project-memory/scripts/project_memory.py bind \
+python3 ~/.agents/skills/task-trace/scripts/task_trace.py bind \
   --workspace /path/to/project \
   --plan docs/tasks/account-sync/PLAN.md \
   --worklog docs/tasks/account-sync/WORKLOG.md
@@ -162,7 +166,7 @@ and continue only within the current authorization.
 - [SKILL.md](SKILL.md): decision, evidence, recovery, and completion workflow.
 - [agents/openai.yaml](agents/openai.yaml): display metadata and invocation policy.
 - [assets/PLAN.md](assets/PLAN.md) and [assets/WORKLOG.md](assets/WORKLOG.md): new-record templates.
-- [scripts/project_memory.py](scripts/project_memory.py): binding and optional hook integration.
+- [scripts/task_trace.py](scripts/task_trace.py): binding and optional hook integration.
 - [references/recovery.md](references/recovery.md): setup, behavior, and verification details.
 - [tests/](tests/): isolated loader and configuration checks.
 

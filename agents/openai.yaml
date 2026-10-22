@@ -1,5 +1,5 @@
 interface:
-  display_name: "项目记忆"
+  display_name: "Task Trace · 任务脉络"
   short_description: "关联项目决策、变更与验证证据，支持检查点恢复和有据收尾"
 policy:
   allow_implicit_invocation: true

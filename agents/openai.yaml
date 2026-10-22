@@ -1,0 +1,5 @@
+interface:
+  display_name: "项目记忆"
+  short_description: "保存项目方案取舍、确认边界和执行检查点，支持长任务中断恢复"
+policy:
+  allow_implicit_invocation: true
